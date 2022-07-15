@@ -173,7 +173,7 @@ namespace KittyCare.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                SELECT Id, Name, Breed, Notes, ImageUrl, OwnerId 
+                SELECT Id, Name, Breed, ImageUrl, OwnerId 
                 FROM Cat
                 WHERE OwnerId = @ownerId
             ";

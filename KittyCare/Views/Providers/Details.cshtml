@@ -1,0 +1,90 @@
+﻿@model KittyCare.Models.ViewModels.ProviderProfileViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Provider</h4>
+    <hr />
+    <dl class="row">
+        <dd class="col-sm-10">
+            <img class="bg-info" src="@Model.Provider.ImageUrl" alt="avatar" width="100" height="100" />
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Provider.FirstName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Provider.FirstName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Provider.LastName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Provider.LastName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Provider.Neighborhood)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Provider.Neighborhood.Name)
+        </dd>
+    </dl>
+    <dl class="row">
+        <dd>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Provisions.FirstOrDefault().Date)
+                        </th>
+                        <th>
+                            Client
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Provisions.FirstOrDefault().Duration)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (Provision provision in Model.Provisions)
+                    {
+                        <tr>
+                            <td>
+                                @{
+                                    string DateString = provision.Date.ToString("MM/dd/yyyy");
+                                }
+                                @Html.DisplayFor(modelItem => DateString)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => provision.Id)
+                            </td>
+                            <td>
+                                @{
+                                    string DurString = provision.Duration / 60 + " min";
+                                }
+                                @Html.DisplayFor(modelItem => DurString)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </dd>
+    </dl>
+    <dl class="col-2">
+        <dd>
+        <dt>
+            Total Provision Time: 
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TotalProvisionTime)
+        </dd>
+        </dd>
+    </dl>
+</div>
+<div>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Provider.Id }) |
+    <a asp-action="Index">Back to List</a>
+</div>

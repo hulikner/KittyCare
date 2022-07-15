@@ -1,14 +1,41 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using KittyCare.Models;
+using KittyCare.Models.ViewModels;
+using KittyCare.Repositories;
+using System.Security.Claims;
+using System;
 
 namespace KittyCare.Controllers
 {
     public class ProvisionsController : Controller
     {
+        private readonly IProvisionRepository _provisionRepo;
+        private readonly IOwnerRepository _ownerRepo;
+        private readonly ICatRepository _catRepo;
+        private readonly IProviderRepository _providerRepo;
+        private readonly INeighborhoodRepository _neighborhoodRepo;
+
+        public ProvisionsController(
+            IProvisionRepository provisionRepository,
+            IOwnerRepository ownerRepository,
+            ICatRepository catRepository,
+            IProviderRepository providerRepository,
+            INeighborhoodRepository neighborhoodRepository)
+        {
+            _provisionRepo = provisionRepository;
+            _ownerRepo = ownerRepository;
+            _catRepo = catRepository;
+            _providerRepo = providerRepository;
+            _neighborhoodRepo = neighborhoodRepository;
+        }
         // GET: ProvisionsController
         public ActionResult Index()
         {
-            return View();
+            List<Provision> provisions = _provisionRepo.GetAllProvisions();
+
+            return View(provisions);
         }
 
         // GET: ProvisionsController/Details/5
@@ -20,19 +47,40 @@ namespace KittyCare.Controllers
         // GET: ProvisionsController/Create
         public ActionResult Create()
         {
-            return View();
+            List<Provider> providers = _providerRepo.GetAllProviders();
+            List<Cat> cats = _catRepo.GetAllCats();
+            ProvisionFormViewModel pfvm = new ProvisionFormViewModel
+            {
+                Providers = providers,
+                Cats = cats,
+                Provision = new Provision(),
+                CatIds = new List<int>()
+            };
+            return View(pfvm);
         }
 
         // POST: ProvisionsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(ProvisionFormViewModel wfvm)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                foreach (int catId in wfvm.CatIds)
+                {
+                    Provision provision = new Provision
+                    {
+                        Date = wfvm.Provision.Date,
+                        Duration = wfvm.Provision.Duration,
+                        ProviderId = wfvm.Provision.ProviderId,
+                        CatId = catId
+                    };
+                    _provisionRepo.AddProvision(provision);
+                }
+
+                return RedirectToAction("Index");
             }
-            catch
+            catch (Exception)
             {
                 return View();
             }

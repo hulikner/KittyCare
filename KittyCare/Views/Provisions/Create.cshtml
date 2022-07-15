@@ -1,0 +1,68 @@
+﻿@model KittyCare.Models.ViewModels.ProvisionFormViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Provision</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Provision.Date" class="control-label"></label>
+                <input asp-for="Provision.Date" value="01-01-2022" class="form-control" />
+                <span asp-validation-for="Provision.Date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Provision.Duration" class="control-label"></label>
+                <input asp-for="Provision.Duration" class="form-control" />
+                <span asp-validation-for="Provision.Duration" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Providers" class="control-label"></label>
+                <select asp-for="Provision.ProviderId" class="form-control">
+                    <option value="">Select Provider</option>
+                    @if (Model.Providers != null)
+                    {
+                        foreach (Provider walker in Model.Providers)
+                        {
+                            <option value="@walker.Id">@walker.FirstName @walker.LastName</option>
+                        }
+                    }
+                </select>
+                <span asp-validation-for="Provision.ProviderId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Cats" class="control-label"></label>
+                <select multiple asp-for="CatIds" class="form-control">
+                    <option value="">Select Cat(s)</option>
+                    @if (Model.Providers != null)
+                    {
+                        foreach (Cat cat in Model.Cats)
+                        {
+                            <option value="@cat.Id">@cat.Name</option>
+                        }
+                    }
+                </select>
+                <span asp-validation-for="CatIds" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+}

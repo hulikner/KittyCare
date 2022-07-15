@@ -31,6 +31,8 @@ namespace KittyCare
             services.AddTransient<ICatRepository, CatRepository>();
             services.AddTransient<INeighborhoodRepository, NeighborhoodRepository>();
             services.AddTransient<IProvisionRepository, ProvisionRepository>();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options => options.LoginPath = "/Owners/LogIn");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,6 +53,7 @@ namespace KittyCare
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

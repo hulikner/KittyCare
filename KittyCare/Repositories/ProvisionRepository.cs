@@ -103,8 +103,8 @@ namespace KittyCare.Repositories
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"SELECT Id, Date, Duration, ProvisionerId, CatId
-                                        FROM Provisions
+                    cmd.CommandText = @"SELECT Id, Date, Duration, ProviderId, CatId
+                                        FROM Provision
                                         WHERE ProviderId = @id";
                     cmd.Parameters.AddWithValue("@id", id);
 
