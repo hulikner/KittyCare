@@ -1,8 +1,18 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model IEnumerable<KittyCare.Models.Cat>
+    
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <img style="height:40vw; width:40vw; border-radius:20px;" src="https://m.media-amazon.com/images/I/51d2LQDTDfL._AC_SL1050_.jpg" />
+
+    <h1 style="display:flex; flex-direction:row; justify-content:center;" class="display-4">Welcome to KittyCare</h1>
+    <h4 style="display:flex; flex-direction:row; justify-content:center;"> Luxury Service For Your Luxurious Pet</h4>
+<div class="text-center" style="display:flex; flex-direction:row; flex-wrap:wrap; justify-content:space-evenly; margin:50px; padding:20px;">
+    @foreach (var item in Model) {
+        <div>
+            
+            <div>
+               <h6> @Html.DisplayFor(modelItem => item.Name)</h6>
+                <img style="border-radius: 15%; height: 200px; width: 200px; object-fit:cover; padding:20px;" src="@item.ImageUrl" alt="avatar" /><br />
+            </div>
+            
+           
+            </div>}
 </div>

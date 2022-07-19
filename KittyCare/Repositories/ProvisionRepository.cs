@@ -31,7 +31,7 @@ namespace KittyCare.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"SELECT Id, Date, Duration, ProviderId, CatId
-                                        FROM Provisions";
+                                        FROM Provision";
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {

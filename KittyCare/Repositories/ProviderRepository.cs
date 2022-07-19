@@ -44,8 +44,8 @@ namespace KittyCare.Repositories
                                 Id = reader.GetInt32(reader.GetOrdinal("Id")),
                                 ImageUrl = reader.GetString(reader.GetOrdinal("ImageUrl")),
                                 NeighborhoodId = reader.GetInt32(reader.GetOrdinal("NeighborhoodId")),
-                                FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
-                                LastName = reader.GetString(reader.GetOrdinal("LastName")),
+                                FirstName = reader.GetString(reader.GetOrdinal("ProviderFirstName")),
+                                LastName = reader.GetString(reader.GetOrdinal("ProviderLastName")),
                                 Neighborhood = new Neighborhood()
                                 {
                                     Id = reader.GetInt32(reader.GetOrdinal("NeighborhoodId")),

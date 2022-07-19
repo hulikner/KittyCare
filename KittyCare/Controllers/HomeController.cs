@@ -6,22 +6,30 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using KittyCare.Repositories;
 
 namespace KittyCare.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ICatRepository _catRepo;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ICatRepository catRepository)
         {
             _logger = logger;
+            _catRepo = catRepository;
         }
 
-        public IActionResult Index()
+        public ActionResult Index()
         {
-            return View();
+            
+
+            List<Cat> cats = _catRepo.GetAllCats();
+
+            return View(cats);
         }
+        
 
         public IActionResult Privacy()
         {

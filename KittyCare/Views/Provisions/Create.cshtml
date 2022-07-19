@@ -28,9 +28,9 @@
                     <option value="">Select Provider</option>
                     @if (Model.Providers != null)
                     {
-                        foreach (Provider walker in Model.Providers)
+                        foreach (Provider provider in Model.Providers)
                         {
-                            <option value="@walker.Id">@walker.FirstName @walker.LastName</option>
+                            <option value="@provider.Id">@provider.FirstName @provider.LastName</option>
                         }
                     }
                 </select>
