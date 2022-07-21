@@ -62,17 +62,17 @@ namespace KittyCare.Controllers
         // POST: ProvisionsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(ProvisionFormViewModel wfvm)
+        public ActionResult Create(ProvisionFormViewModel pfvm)
         {
             try
             {
-                foreach (int catId in wfvm.CatIds)
+                foreach (int catId in pfvm.CatIds)
                 {
                     Provision provision = new Provision
                     {
-                        Date = wfvm.Provision.Date,
-                        Duration = wfvm.Provision.Duration,
-                        ProviderId = wfvm.Provision.ProviderId,
+                        Date = pfvm.Provision.Date,
+                        Duration = pfvm.Provision.Duration,
+                        ProviderId = pfvm.Provision.ProviderId,
                         CatId = catId
                     };
                     _provisionRepo.AddProvision(provision);

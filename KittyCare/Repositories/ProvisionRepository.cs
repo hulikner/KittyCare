@@ -30,8 +30,14 @@ namespace KittyCare.Repositories
 
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"SELECT Id, Date, Duration, ProviderId, CatId
-                                        FROM Provision";
+                    cmd.CommandText = @"SELECT p.Id, p.Date, p.Duration, p.ProviderId, p.CatId, 
+                                               d.Id, d.FirstName, d.LastName, d.ImageUrl, d.NeighborhoodId, 
+                                               n.Id, n.Name AS NeighborhoodName, 
+                                               c.Id, c.Name AS CatName
+                                        FROM Provision p
+                                        LEFT JOIN Cat c ON p.CatId = c.Id
+                                        LEFT JOIN Provider d ON p.ProviderId = d.Id
+                                        LEFT JOIN Neighborhood n ON d.NeighborhoodId = n.Id";
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
@@ -44,7 +50,24 @@ namespace KittyCare.Repositories
                                 Date = reader.GetDateTime(reader.GetOrdinal("Date")),
                                 Duration = reader.GetInt32(reader.GetOrdinal("Duration")),
                                 ProviderId = reader.GetInt32(reader.GetOrdinal("ProviderId")),
-                                CatId = reader.GetInt32(reader.GetOrdinal("CatId"))
+                                CatId = reader.GetInt32(reader.GetOrdinal("CatId")),
+                                Provider = new Provider()
+                                {
+                                    Id = reader.GetInt32(reader.GetOrdinal("ProviderId")),
+                                    FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
+                                    LastName = reader.GetString(reader.GetOrdinal("LastName")),
+                                    NeighborhoodId = reader.GetInt32(reader.GetOrdinal("NeighborhoodId")),
+                                },
+                                Neighborhood = new Neighborhood()
+                                {
+                                    Id = reader.GetInt32(reader.GetOrdinal("NeighborhoodId")),
+                                    Name = reader.GetString(reader.GetOrdinal("NeighborhoodName")),
+                                },
+                                Cat = new Cat()
+                                {
+                                    Id = reader.GetInt32(reader.GetOrdinal("CatId")),
+                                    Name = reader.GetString(reader.GetOrdinal("CatName")),
+                                }
                             };
                             provisions.Add(provision);
                         }
@@ -61,9 +84,9 @@ namespace KittyCare.Repositories
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"INSERT INTO Provisions (Date, Duration, ProvisionerId, CatId)
+                    cmd.CommandText = @"INSERT INTO Provision (Date, Duration, ProviderId, CatId)
                                         OUTPUT INSERTED.ID
-                                        VALUES (@date, @duration, @provisionerId, @catId)";
+                                        VALUES (@date, @duration, @providerId, @catId)";
 
                     cmd.Parameters.AddWithValue("@date", provision.Date);
                     cmd.Parameters.AddWithValue("@duration", provision.Duration);

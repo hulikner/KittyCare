@@ -115,8 +115,9 @@ namespace KittyCare.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                SELECT Id, FirstName, LastName, ImageUrl, NeighborhoodId
-                FROM Provider
+                SELECT p.Id, p.FirstName, p.LastName, p.ImageUrl, p.NeighborhoodId, n.Name
+                FROM Provider p
+                LEFT JOIN Neighborhood n ON p.NeighborhoodId = n.Id
                 WHERE NeighborhoodId = @neighborhoodId
             ";
 
@@ -134,7 +135,11 @@ namespace KittyCare.Repositories
                                 FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
                                 LastName = reader.GetString(reader.GetOrdinal("LastName")),
                                 ImageUrl = reader.GetString(reader.GetOrdinal("ImageUrl")),
-                                NeighborhoodId = reader.GetInt32(reader.GetOrdinal("NeighborhoodId"))
+                                NeighborhoodId = reader.GetInt32(reader.GetOrdinal("NeighborhoodId")),
+                                Neighborhood = new Neighborhood()
+                                {
+                                    Name = reader.GetString(reader.GetOrdinal("Name")),
+                                }
                             };
 
                             providers.Add(provider);

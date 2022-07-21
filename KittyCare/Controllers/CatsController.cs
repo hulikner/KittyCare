@@ -6,15 +6,18 @@ using KittyCare.Repositories;
 using System.Security.Claims;
 using System;
 using Microsoft.AspNetCore.Authorization;
+using KittyCare.Models.ViewModels;
 
 namespace KittyCare.Controllers
 {
     public class CatsController : Controller
     {
         private readonly ICatRepository _catRepo;
-        public CatsController(ICatRepository catRepository)
+        private readonly IOwnerRepository _ownerRepo;
+        public CatsController(ICatRepository catRepository, IOwnerRepository ownerRepository)
         {
             _catRepo = catRepository;
+            _ownerRepo = ownerRepository;
         }
         // GET: CatsController
         [Authorize]
@@ -31,13 +34,18 @@ namespace KittyCare.Controllers
         public ActionResult Details(int id)
         {
             Cat cat = _catRepo.GetCatById(id);
+            int ownerId = GetCurrentUserId();
+            Owner owner = _ownerRepo.GetOwnerById(ownerId);
+            CatOwnerViewModel covm = new CatOwnerViewModel();
+            covm.Cat = cat;
+            covm.Owner = owner;
 
             if (cat == null)
             {
                 return NotFound();
             }
 
-            return View(cat);
+            return View(covm);
         }
 
         // GET: CatsController/Create
@@ -56,6 +64,7 @@ namespace KittyCare.Controllers
             {
                 // update the cats OwnerId to the current user's Id
                 cat.OwnerId = GetCurrentUserId();
+                Console.WriteLine(cat.OwnerId);
 
                 _catRepo.AddCat(cat);
 

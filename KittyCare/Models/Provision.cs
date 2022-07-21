@@ -10,5 +10,8 @@ namespace KittyCare.Models
         public int Duration { get; set; }
         public int ProviderId { get; set; }
         public int CatId { get; set; }
+        public Cat Cat { get; set; }
+        public Provider Provider { get; set; }
+        public Neighborhood Neighborhood { get; set; }
     }
 }

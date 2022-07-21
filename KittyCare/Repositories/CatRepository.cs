@@ -3,6 +3,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System;
+using KittyCare.Models.ViewModels;
 
 namespace KittyCare.Repositories
 {
@@ -63,9 +64,9 @@ namespace KittyCare.Repositories
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"SELECT Name, OwnerId, Breed, ImageUrl
-                                        FROM Cat
-                                        WHERE Id = @id";
+                    cmd.CommandText = @"SELECT c.Id, c.Name, c.Breed, c.ImageUrl, c.OwnerId
+                                        FROM Cat c
+                                        WHERE c.Id = @id";
 
                     cmd.Parameters.AddWithValue("@id", id);
 
@@ -79,7 +80,8 @@ namespace KittyCare.Repositories
                                 Name = reader.GetString(reader.GetOrdinal("Name")),
                                 OwnerId = reader.GetInt32(reader.GetOrdinal("OwnerId")),
                                 Breed = reader.GetString(reader.GetOrdinal("Breed")),
-                                ImageUrl = !reader.IsDBNull(reader.GetOrdinal("ImageUrl")) ? reader.GetString(reader.GetOrdinal("ImageUrl")) : " "
+                                ImageUrl = !reader.IsDBNull(reader.GetOrdinal("ImageUrl")) ? reader.GetString(reader.GetOrdinal("ImageUrl")) : " ",
+                                
                             };
                             return cat;
                         }
@@ -100,9 +102,9 @@ namespace KittyCare.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                                        INSERT INTO Cat ([Name], OwnerId, Breed, Notes, ImageUrl)
+                                        INSERT INTO Cat ([Name], OwnerId, Breed, ImageUrl)
                                         OUTPUT INSERTED.Id
-                                        VALUES (@name, @ownerId, @breed, @notes, @imageUrl)";
+                                        VALUES (@name, @ownerId, @breed, @imageUrl)";
 
                     cmd.Parameters.AddWithValue("@name", cat.Name);
                     cmd.Parameters.AddWithValue("@ownerId", cat.OwnerId);
@@ -173,9 +175,10 @@ namespace KittyCare.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                SELECT Id, Name, Breed, ImageUrl, OwnerId 
-                FROM Cat
-                WHERE OwnerId = @ownerId
+                SELECT c.Id, c.Name, c.Breed, c.ImageUrl, c.OwnerId
+                FROM Cat c
+                LEFT JOIN Owner o ON c.OwnerId = o.Id
+                WHERE c.OwnerId = @ownerId
             ";
 
                     cmd.Parameters.AddWithValue("@ownerId", ownerId);
@@ -192,7 +195,8 @@ namespace KittyCare.Repositories
                                 Id = reader.GetInt32(reader.GetOrdinal("Id")),
                                 Name = reader.GetString(reader.GetOrdinal("Name")),
                                 Breed = reader.GetString(reader.GetOrdinal("Breed")),
-                                OwnerId = reader.GetInt32(reader.GetOrdinal("OwnerId"))
+                                OwnerId = reader.GetInt32(reader.GetOrdinal("OwnerId")),
+                                
                             };
 
                             if (reader.IsDBNull(reader.GetOrdinal("ImageUrl")) == false)
